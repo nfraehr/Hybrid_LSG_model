@@ -186,7 +186,7 @@ with open('trainingtime.txt', 'w') as f:
     f.write('Training time for SPGP model: %i s \n' % trainSPGP_time)
 
     Total_time = ckpt_trainSPGPend_time - start_time
-    f.write('Total time of script: %i s \n' % Total_time)
+    f.write('Total time: %i s \n' % Total_time)
 
     f.close()
 

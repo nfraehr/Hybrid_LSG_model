@@ -1,0 +1,6 @@
+Time for loading binary data: 86 s 
+Time for loading functions: 0 s 
+Creating and saving time for EOF obj: 181 s 
+Time for EOF analysis and creating training data: 28 s 
+Training time for SPGP model: 208 s 
+Total time: 503 s 

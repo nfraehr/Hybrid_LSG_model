@@ -28,7 +28,7 @@ File_LF = next(walk(Path_LF), (None, None, []))[2]  # [] if no file
 
 # %% Save events names to text file
 
-with open('Events.csv', mode='w') as f:
+with open('MIKE21_files.csv', mode='w') as f:
     csvwriter = csv.writer(f)
     for idx in range(len(File_HF)):
         csvwriter.writerow([idx, File_HF[idx], File_LF[idx]])

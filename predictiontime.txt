@@ -1,0 +1,4 @@
+Time for generating validation data: 12 s 
+Prediction time for SPGP model: 4 s 
+Reconstruction time: 25 s 
+Total time: 42 s 
