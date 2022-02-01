@@ -120,12 +120,6 @@ def get_Mike21_model_data(filepath):
 HF_ec, HF_el_ids, HF_nc, HF_node_ids, HF_elem_table, HF_area = get_Mike21_model_data(Path_HF + File_HF[0])
 LF_ec, LF_el_ids, LF_nc, LF_node_ids, LF_elem_table, LF_area = get_Mike21_model_data(Path_LF + File_LF[0])
 
-# Save data
-np.savez('../Managed_Data/Model_data/HF_Mike21_data.npz', HF_ec=HF_ec, HF_el_ids=HF_el_ids,
-         HF_nc=HF_nc, HF_node_ids=HF_node_ids, HF_elem_table=HF_elem_table, HF_area=HF_area)
-np.savez('../Managed_Data/Model_data/LF_Mike21_data.npz', LF_ec=LF_ec, LF_el_ids=LF_el_ids,
-         LF_nc=LF_nc, LF_node_ids=LF_node_ids, LF_elem_table=LF_elem_table, LF_area=LF_area)
-
 
 # %% Interpolate LF data to HF grid
 
