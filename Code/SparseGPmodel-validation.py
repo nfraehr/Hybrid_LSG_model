@@ -263,8 +263,8 @@ LF_int_val = tuple2array(LF_int_events_bin)
 HF_val_FP = HF_val[:, TF_idx]
 LF_int_val_FP = LF_int_val[:, TF_idx]
 
-HF_ECs_val = CreatePseudoECs(HF_val_FP, HF_EOFs[0:n_ECs, :], n_ECs, Area_FP)
-LF_int_pECs_val = CreatePseudoECs(LF_int_val_FP, HF_EOFs[0:n_ECs, :], n_ECs, Area_FP)
+HF_ECs_val = CreatePseudoECs(HF_val_FP, HF_EOFs[0:n_ECs, :], Area_FP)
+LF_int_pECs_val = CreatePseudoECs(LF_int_val_FP, HF_EOFs[0:n_ECs, :], Area_FP)
 
 Val_data_endtime = time.monotonic()
 # %% Predictions
@@ -286,6 +286,7 @@ HF_recon = reconstruct_binary_highres_data(HF_val, HF_EOFs, HF_mean_train, HF_EC
 # Divide validation data into each event
 # Reconstructed data
 LFint2HF_recon_events = valdata2eventtuple(LFint2HF_recon, Time)
+
 HF_recon_events = valdata2eventtuple(HF_recon, Time)
 
 Reconstruction_endtime = time.monotonic()
@@ -349,6 +350,9 @@ for ival in range(len(val_events)):
 
     # HF data reconstruction using predicted LF ECs
     LFint2HF_recon_Aflood = np.sum(LFint2HF_recon_events[ival] * Area, axis=1)
+
+    LFint2HF_recon_Aflood_LB = np.sum(LFint2HF_recon_events_LB[ival] * Area, axis=1)
+    LFint2HF_recon_Aflood_UB = np.sum(LFint2HF_recon_events_UB[ival] * Area, axis=1)
 
     # Reconstructed using true ECs
     HF_recon_Aflood = np.sum(HF_recon_events[ival] * Area, axis=1)
