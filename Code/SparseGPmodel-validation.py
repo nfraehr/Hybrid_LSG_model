@@ -316,7 +316,7 @@ for i in range(1, 4):
     ax1.plot(HF_ECs_val[:, k], 'k-', label='High-fidelity ECs')
     ax1.plot(LF_int_pECs_val[:, k], 'r-', label='Low-fidelity ECs')
 
-    ax1.plot(ECs_pred[:, k], 'b--', label='LF-GP model')
+    ax1.plot(ECs_pred[:, k], 'b--', label='LSG model')
     ax1.fill_between(range(len(ECs_pred)), ECs_pred_LB[:, k], ECs_pred_UB[:, k],
                      label='GP conf. 95%', alpha=0.75, edgecolor='gray', facecolor='cyan')
 
@@ -361,7 +361,7 @@ for ival in range(len(val_events)):
     ax1.plot(Time[ival], LF_Aflood_all / 1e6, 'r-', label='Low-fidelity simulation')
     ax1.plot(Time[ival], HF_recon_Aflood / 1e6, 'k--', label='Prediction with true ECs')
 
-    ax1.plot(Time[ival], LFint2HF_recon_Aflood / 1e6, 'b-', linewidth=1.0, label='LF-GP simulation')
+    ax1.plot(Time[ival], LFint2HF_recon_Aflood / 1e6, 'b-', linewidth=1.0, label='LSG simulation')
 
     ax1.set_ylabel('Inundation extent [km²]')
     ax1.grid()
@@ -509,7 +509,7 @@ plt.savefig('Managed_Data/Classification_Figures/Detectec_falsealarm_misses.png'
             bbox_inches="tight", dpi=300)
 plt.show()
 
-#%% Plot the inundation for the LF, HF and LF-GP model at 3 different timesteps of event 1 for comparison
+#%% Plot the inundation for the LF, HF and LSG model at 3 different timesteps of event 1 for comparison
 # Load Mike21 data for plotting
 dfs_LF = Dfsu("Raw_Data/LF/Chow_LF_20110701_20111015.dfsu")  # dfsu object
 
@@ -538,7 +538,7 @@ for t_idx in range(len(plot_times)):
     cbar = hb.collections[0].colorbar
     cbar.remove()
 
-    #LF-GP model
+    #LSG model
     plotelements = np.where(LFint2HF_recon_events[0][t_nearest] == 1)[0]  # Elements to plot
     #Plot data
     hb = dfs_HF.plot(LFint2HF_recon_events[0][t_nearest][plotelements], elements=plotelements, plot_type='patch',
@@ -567,7 +567,7 @@ for t_idx in range(len(plot_times)):
     # Insert title
     if t_idx == 0:
         axs[t_idx, 0].title.set_text('Low-fidelity model')
-        axs[t_idx, 1].title.set_text('LF-GP model')
+        axs[t_idx, 1].title.set_text('LSG model')
         axs[t_idx, 2].title.set_text('High-fidelity model')
 
     # Insert text showing the plotted time
