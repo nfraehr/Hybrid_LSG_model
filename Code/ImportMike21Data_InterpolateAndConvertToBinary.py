@@ -16,7 +16,7 @@ import csv
 
 start_time = time.monotonic()
 # %% Get list of files to import
-Path = "../Raw_Data/"
+Path = "Raw_Data/"
 
 # HF model data
 Path_HF = Path + 'HF/'
@@ -210,17 +210,17 @@ for idx in val_events:
     HF_val_evt_time = HF_val_evt_time + (HF_evt_time[idx],)
 
 # %% Save binary data arrays
-np.savez('../Managed_Data/Events_data/Binary_Data_Train_Events.npz', HF_events_bin=HF_train_events_bin,
+np.savez('Managed_Data/Events_data/Binary_Data_Train_Events.npz', HF_events_bin=HF_train_events_bin,
          LFint_events_bin=LF_int_train_events_bin, Time=HF_train_evt_time, Area=HF_area)
 
-np.savez('../Managed_Data/Events_data/Binary_Data_Val_Events.npz', HF_events_bin=HF_val_events_bin,
+np.savez('Managed_Data/Events_data/Binary_Data_Val_Events.npz', HF_events_bin=HF_val_events_bin,
          LFint_events_bin=LF_int_val_events_bin, Time=HF_val_evt_time, Area=HF_area)
 
 #Save LF data to use for comparison
-np.savez('../Managed_Data/Events_data/Binary_Data_Train_Events_LFmodel.npz', LF_events_bin=LF_train_events_bin,
+np.savez('Managed_Data/Events_data/Binary_Data_Train_Events_LFmodel.npz', LF_events_bin=LF_train_events_bin,
          Time=HF_train_evt_time, Area=LF_area) #timing for LF and HF events are the same.
 
-np.savez('../Managed_Data/Events_data/Binary_Data_Val_Events_LFmodel.npz', LF_events_bin=LF_val_events_bin,
+np.savez('Managed_Data/Events_data/Binary_Data_Val_Events_LFmodel.npz', LF_events_bin=LF_val_events_bin,
          Time=HF_val_evt_time, Area=LF_area) #timing for LF and HF events are the same.
 
 # %%

@@ -17,7 +17,7 @@ from Datamanagement_Functions import tuple2array
 
 start_time = time.monotonic()
 # %% Import data
-data = np.load('../Managed_Data/Events_data/Binary_Data_Train_Events.npz', allow_pickle=True)
+data = np.load('Managed_Data/Events_data/Binary_Data_Train_Events.npz', allow_pickle=True)
 
 HF_events_bin = tuple(data['HF_events_bin'])
 LF_int_events_bin = tuple(data['LFint_events_bin'])
@@ -97,7 +97,7 @@ def sparse_gaussian_model_training(highfidelity_ecs_train, lowfidelity_ecs_train
 
         # Save model
         params = gpflow.utilities.parameter_dict(spgp_model)
-        np.savez('../Managed_Data/SPGP_class_models/SPGP_cls_trained_ECs_%s.npz' % iECs,
+        np.savez('Managed_Data/SPGP_class_models/SPGP_cls_trained_ECs_%s.npz' % iECs,
                  param=params,
                  x_train=x_train, y_train=y_train, M=n_inducing_points, scaler_x=scaler_x, scaler_y=scaler_y)
 
@@ -124,7 +124,7 @@ TF_idx = np.where((HF_train.min(axis=0) < dry_threshold) &
                   (HF_train.max(axis=0) > dry_threshold))[0]  # Temporary flooded TF
 
 # Save categories
-np.savez('../Managed_Data/SPGP_class_models/Categories_Training_data.npz',
+np.savez('Managed_Data/SPGP_class_models/Categories_Training_data.npz',
          AD_idx=AD_idx, wet_idx=wet_idx, AF_idx=AF_idx, TF_idx=TF_idx)
 # %% Perform EOF analysis on floodplain data
 # Training data for floodplain
@@ -146,7 +146,7 @@ ECs_variance_explained = np.cumsum(HF_EOFobj.explained_variance_ratio_)[-1]
 Eigenvalues = HF_EOFobj.explained_variance_
 
 # Save EOF data
-np.savez('../Managed_Data/SPGP_class_models/EOF_data.npz',
+np.savez('Managed_Data/SPGP_class_models/EOF_data.npz',
          HF_EOFs=HF_EOFs, HF_mean_train=HF_mean_train, Area_FP=Area_FP, n_ECs=n_ECs)
 
 ckpt_saveEOF_time = time.monotonic()

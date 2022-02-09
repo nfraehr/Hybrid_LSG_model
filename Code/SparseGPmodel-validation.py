@@ -20,7 +20,7 @@ from EOF_Functions import CreatePseudoECs, ReconstructDataFromEOFandECs
 from Datamanagement_Functions import tuple2array
 
 # %% Import data
-data = np.load('../Managed_Data/Events_data/Binary_Data_Val_Events.npz', allow_pickle=True)
+data = np.load('Managed_Data/Events_data/Binary_Data_Val_Events.npz', allow_pickle=True)
 
 HF_events_bin = tuple(data['HF_events_bin'])
 LF_int_events_bin = tuple(data['LFint_events_bin'])
@@ -28,7 +28,7 @@ Time = tuple(data['Time'])
 Area = data['Area']
 
 #LF data for comparison
-data_LF = np.load('../Managed_Data/Events_data/Binary_Data_Val_Events_LFmodel.npz', allow_pickle=True)
+data_LF = np.load('Managed_Data/Events_data/Binary_Data_Val_Events_LFmodel.npz', allow_pickle=True)
 LF_events_bin = tuple(data_LF['LF_events_bin'])
 LF_Area = data_LF['Area']
 
@@ -43,7 +43,7 @@ def load_sparse_gaussian_models(n_output_ecs=1):
 
     for iECs in range(n_output_ecs):
         # Load data
-        fullpath = '../Managed_Data/SPGP_class_models/SPGP_cls_trained_ECs_%s.npz' % iECs
+        fullpath = 'Managed_Data/SPGP_class_models/SPGP_cls_trained_ECs_%s.npz' % iECs
 
         data = np.load(fullpath, allow_pickle=True)
         m_param = data['param'].item()
@@ -236,7 +236,7 @@ def inundation_detection(true_labels, pred_labels):
 
 
 # %% Import EOF data
-EOF_data = np.load('../Managed_Data/SPGP_class_models/EOF_data.npz', allow_pickle=True)
+EOF_data = np.load('Managed_Data/SPGP_class_models/EOF_data.npz', allow_pickle=True)
 
 HF_EOFs = EOF_data['HF_EOFs']
 HF_mean_train = EOF_data['HF_mean_train']
@@ -244,7 +244,7 @@ n_ECs = EOF_data['n_ECs']
 Area_FP = EOF_data['Area_FP']
 
 # %% Load category data
-Cat_data = np.load('../Managed_Data/SPGP_class_models/Categories_Training_data.npz',
+Cat_data = np.load('Managed_Data/SPGP_class_models/Categories_Training_data.npz',
                    allow_pickle=True)
 
 AD_idx = Cat_data['AD_idx']  # Always dry
@@ -327,7 +327,7 @@ ax1.legend(title='Legend')
 
 fig.tight_layout()
 
-fig.savefig('../Managed_Data/Classification_Figures/ECs_val_events.png',
+fig.savefig('Managed_Data/Classification_Figures/ECs_val_events.png',
             bbox_inches="tight", dpi=300)
 plt.show()
 
@@ -338,8 +338,7 @@ Rel_Peak_value_error = np.zeros(len(val_events)) #relative Peak Value Estimate
 Rel_Peak_timing_error_peakperiod = np.zeros(len(val_events)) #relative average peak time error compared to the peak period
 Rel_Peak_timing_error_floodperiod = np.zeros(len(val_events)) #relative average peak time error compared to the rising limb of the flood event
 
-cm = 1/2.54  # centimeters in inches
-fig = plt.figure(figsize=(15*cm, 12*cm))
+fig = plt.figure(figsize=(9, 6))
 date_form = DateFormatter("%m-%Y")
 
 for ival in range(len(val_events)):
@@ -350,9 +349,6 @@ for ival in range(len(val_events)):
 
     # HF data reconstruction using predicted LF ECs
     LFint2HF_recon_Aflood = np.sum(LFint2HF_recon_events[ival] * Area, axis=1)
-
-    LFint2HF_recon_Aflood_LB = np.sum(LFint2HF_recon_events_LB[ival] * Area, axis=1)
-    LFint2HF_recon_Aflood_UB = np.sum(LFint2HF_recon_events_UB[ival] * Area, axis=1)
 
     # Reconstructed using true ECs
     HF_recon_Aflood = np.sum(HF_recon_events[ival] * Area, axis=1)
@@ -400,7 +396,7 @@ fig.tight_layout()
 leg = ax1.legend(title='Legend', loc='center left', bbox_to_anchor=(1.35, 0.5), frameon=False)
 leg._legend_box.align = "left"
 
-fig.savefig('../Managed_Data/Classification_Figures/Floodedarea_valevents.png',
+fig.savefig('Managed_Data/Classification_Figures/Floodedarea_valevents.png',
             bbox_inches="tight", dpi=300)
 plt.show()
 
@@ -431,7 +427,7 @@ for ival in range(len(val_events)):
 POD_min = 1
 RFA_max = 0
 
-fig = plt.figure(figsize=(15*cm, 12*cm))
+fig = plt.figure(figsize=(9, 6))
 
 for ival in range(len(val_events)):
     LFint2HF_POD_alltstp, LFint2HF_RFA_alltstp = pod_fra_all_tstep(HF_events_bin[ival],
@@ -449,7 +445,7 @@ for ival in range(len(val_events)):
     ax1.plot(Time[ival], LFint2HF_POD_alltstp, 'b-', label='Probability of detection')
 
     ax1.set_ylim([0, 1])
-    ax1.set_ylabel('Detection [-]')
+    ax1.set_ylabel('Detection')
 
     ax1.plot(Time[ival], LFint2HF_RFA_alltstp, 'r--', label='Rate of false alarm')
 
@@ -462,16 +458,17 @@ fig.tight_layout()
 leg = ax1.legend(title='Legend', loc='center left', bbox_to_anchor=(1.35, 0.5), frameon=False)
 leg._legend_box.align = "left"
 
-fig.savefig('../Managed_Data/Classification_Figures/POD_RFA_valevents.png',
+fig.savefig('Managed_Data/Classification_Figures/POD_RFA_valevents.png',
             bbox_inches="tight", dpi=300)
 plt.show()
 # %% Examining location of highest errors
 
 # Load Mike21 data for plotting
-dfs_HF = Dfsu("../Raw_Data/HF/Chow_HF_20110701_20111015.dfsu")  # dfsu object
+dfs_HF = Dfsu("Raw_Data/HF/Chow_HF_20110701_20111015.dfsu")  # dfsu object
 
 
 color_map = matplotlib.colors.ListedColormap(['dodgerblue', 'yellow', 'red'])
+cm = 1/2.54
 fig = plt.figure(figsize=(15*cm, 12*cm))
 
 for ival in range(len(val_events)):
@@ -504,17 +501,17 @@ fig.tight_layout()
 
 detected_patch = mpatches.Patch(color='dodgerblue', label='Detected')
 FalseAlarm_patch = mpatches.Patch(color='yellow', label='False Alarm')
-Misses_patch = mpatches.Patch(color='red', label='Misses')
+Misses_patch = mpatches.Patch(color='red', label='Miss')
 leg = ax1.legend(title='Legend', handles=[detected_patch, FalseAlarm_patch, Misses_patch], loc='center left', bbox_to_anchor=(1.35, 0.5), frameon=False)
 leg._legend_box.align = "left"
 
-plt.savefig('../Managed_Data/Classification_Figures/Detectec_falsealarm_misses.png',
+plt.savefig('Managed_Data/Classification_Figures/Detectec_falsealarm_misses.png',
             bbox_inches="tight", dpi=300)
 plt.show()
 
 #%% Plot the inundation for the LF, HF and LF-GP model at 3 different timesteps of event 1 for comparison
 # Load Mike21 data for plotting
-dfs_LF = Dfsu("../Raw_Data/LF/Chow_LF_20110701_20111015.dfsu")  # dfsu object
+dfs_LF = Dfsu("Raw_Data/LF/Chow_LF_20110701_20111015.dfsu")  # dfsu object
 
 
 # Timesteps to plot for comparison
@@ -578,6 +575,6 @@ for t_idx in range(len(plot_times)):
     axs[t_idx, 0].yaxis.set_label_coords(-.3, .5)
 
 fig.tight_layout()
-plt.savefig('../Managed_Data/Classification_Figures/Inundation_evolution_event1.png',
+plt.savefig('Managed_Data/Classification_Figures/Inundation_evolution_event1.png',
             bbox_inches="tight", dpi=300)
 plt.show()
