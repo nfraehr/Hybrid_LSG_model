@@ -100,10 +100,10 @@ def spgp_model_predict(lowfidelity_ecs_val, n_input_ecs=1, n_output_ecs=1):
         spgp_model = spgp_list[iECs]
 
         # Scaling data
-        x_val = sc_x[iECs].transform(x_val)
+        x_val_sc = sc_x[iECs].transform(x_val)
 
         # Predictions
-        y_pred_mean, y_pred_var = spgp_model.predict_y(x_val)
+        y_pred_mean, y_pred_var = spgp_model.predict_y(x_val_sc)
         y_pred_mean = y_pred_mean.numpy()
         y_pred_var = y_pred_var.numpy()
 

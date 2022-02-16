@@ -184,7 +184,7 @@ for idx in range(1, len(HF_events)):
 
 #%% Divide into training and validation data
 # Training and validation events. Index is according to list of filenames in variable File_HF
-train_events = [1, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 25]
+train_events = [1, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
 val_events = [0, 2, 8]
 
 # Training events

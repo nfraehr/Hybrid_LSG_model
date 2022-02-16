@@ -41,33 +41,31 @@ def sparse_gaussian_model_training(highfidelity_ecs_train, lowfidelity_ecs_train
     # Training data
     n_input_ecs = np.array(range(n_input_ecs))
     x_train = np.c_[lowfidelity_ecs_train[:, n_input_ecs]]
+    x_train_sc = scaler_x.fit_transform(x_train)
 
     # Loop for each mode that needs to be predicted
     for iECs in range(n_output_ecs):
-        # x_train = np.c_[lowfidelity_ecs_train[:, iECs]]
-
         # y training data
         y_train = np.c_[highfidelity_ecs_train[:, iECs]]
 
         # Scaling of data to mean of 0 and variance 1
-        x_train = scaler_x.fit_transform(x_train)
-        y_train = scaler_y.fit_transform(y_train)
+        y_train_sc = scaler_y.fit_transform(y_train)
 
         # Create array with initial inducing points
-        dim = x_train.shape[1]
-        inducing_points = np.c_[np.linspace(x_train[:, 0].min(), x_train[:, 0].max(), n_inducing_points)]
+        dim = x_train_sc.shape[1]
+        inducing_points = np.c_[np.linspace(x_train_sc[:, 0].min(), x_train_sc[:, 0].max(), n_inducing_points)]
         for j in range(1, dim):
             inducing_points = np.c_[inducing_points,
-                                    np.linspace(x_train[:, j].min(), x_train[:, j].max(), n_inducing_points)]
+                                    np.linspace(x_train_sc[:, j].min(), x_train_sc[:, j].max(), n_inducing_points)]
 
         # Find initial lengthscale
-        ini_length = np.mean(abs(x_train))
+        ini_length = np.mean(abs(x_train_sc))
 
         # Create kernel
         k_exp = gpflow.kernels.Exponential(variance=1, lengthscales=ini_length)
 
         # Create model
-        spgp_model = gpflow.models.SGPR(data=(x_train, y_train), kernel=k_exp, inducing_variable=inducing_points)
+        spgp_model = gpflow.models.SGPR(data=(x_train_sc, y_train_sc), kernel=k_exp, inducing_variable=inducing_points)
 
 
         # Choosing optimiser
@@ -99,7 +97,7 @@ def sparse_gaussian_model_training(highfidelity_ecs_train, lowfidelity_ecs_train
         params = gpflow.utilities.parameter_dict(spgp_model)
         np.savez('Managed_Data/SPGP_class_models/SPGP_cls_trained_ECs_%s.npz' % iECs,
                  param=params,
-                 x_train=x_train, y_train=y_train, M=n_inducing_points, scaler_x=scaler_x, scaler_y=scaler_y)
+                 x_train=x_train_sc, y_train=y_train_sc, M=n_inducing_points, scaler_x=scaler_x, scaler_y=scaler_y)
 
         # Print how far the process is
         print('ECs %i / %i is done \n' % (iECs + 1, n_output_ecs))
@@ -153,10 +151,10 @@ ckpt_saveEOF_time = time.monotonic()
 
 # %% Get ECs for training
 # Pseudo ECs and real ECs are the same for HF training data, as the EOF is performed on that.
-HF_ECs_train = CreatePseudoECs(HF_train_FP, HF_EOFs[0:n_ECs, :], n_ECs, Area_FP)
+HF_ECs_train = CreatePseudoECs(HF_train_FP, HF_EOFs[0:n_ECs, :], Area_FP)
 
 # Pseudo ECs is used, so all ECs are made from the same modes, and thereby comparable
-LF_int_pECs_train = CreatePseudoECs(LF_int_train_FP, HF_EOFs[0:n_ECs, :], n_ECs, Area_FP)
+LF_int_pECs_train = CreatePseudoECs(LF_int_train_FP, HF_EOFs[0:n_ECs, :], Area_FP)
 
 
 ckpt_createtrainingdata_time = time.monotonic()
