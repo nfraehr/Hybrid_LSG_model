@@ -11,6 +11,9 @@ import matplotlib
 from matplotlib import pyplot as plt
 from matplotlib.dates import DateFormatter
 import matplotlib.patches as mpatches
+from matplotlib.offsetbox import AnchoredText
+from matplotlib_scalebar.scalebar import ScaleBar
+
 from mikeio import Dfsu
 import numpy as np
 import pandas as pd
@@ -515,7 +518,7 @@ dfs_LF = Dfsu("Raw_Data/LF/Chow_LF_20110701_20111015.dfsu")  # dfsu object
 
 
 # Timesteps to plot for comparison
-plot_times_str = ['15/12/2010', '15/02/2011', '15/05/2011']
+plot_times_str = ['15/12/2010', '15/02/2011', '15/04/2011']
 plot_times = pd.to_datetime(plot_times_str, format='%d/%m/%Y')
 
 fig, axs = plt.subplots(nrows=3, ncols=3, figsize=(15*cm, 11*cm))
@@ -531,12 +534,15 @@ for t_idx in range(len(plot_times)):
     hb = dfs_LF.plot(LF_events_bin[0][t_nearest][plotelements], elements=plotelements, plot_type='patch',
                      show_mesh=False, cmap=color_map, vmin=0.5, vmax=1.5, ax=axs[t_idx, 0])
     # remove the x and y ticks
-    # axs[t_idx, 0].axis('off')
     axs[t_idx, 0].axes.xaxis.set_ticks([])
     axs[t_idx, 0].axes.yaxis.set_ticks([])
     # remove colorbar
     cbar = hb.collections[0].colorbar
     cbar.remove()
+
+    # Add inundated area to figure
+    A_LF = round(np.sum(LF_events_bin[0][t_nearest] * LF_Area) / 1e6, 1)
+    axs[t_idx, 0].add_artist(AnchoredText(str(A_LF) + " km²", loc=3, borderpad=0.1, pad=0.2, frameon=False, prop=dict(fontsize=9)))
 
     #LSG model
     plotelements = np.where(LFint2HF_recon_events[0][t_nearest] == 1)[0]  # Elements to plot
@@ -544,12 +550,15 @@ for t_idx in range(len(plot_times)):
     hb = dfs_HF.plot(LFint2HF_recon_events[0][t_nearest][plotelements], elements=plotelements, plot_type='patch',
                      show_mesh=False, cmap=color_map, vmin=0.5, vmax=1.5, ax=axs[t_idx, 1])
     # remove the x and y ticks
-    # axs[t_idx, 0].axis('off')
     axs[t_idx, 1].axes.xaxis.set_ticks([])
     axs[t_idx, 1].axes.yaxis.set_ticks([])
     # remove colorbar
     cbar = hb.collections[0].colorbar
     cbar.remove()
+
+    # Add inundated area to figure
+    A_LSG = round(np.sum(LFint2HF_recon_events[0][t_nearest] * Area) / 1e6, 1)
+    axs[t_idx, 1].add_artist(AnchoredText(str(A_LSG) + " km²", loc=3, borderpad=0.1, pad=0.2, frameon=False, prop=dict(fontsize=9)))
 
     #HF model
     plotelements = np.where(HF_events_bin[0][t_nearest] == 1)[0]  # Elements to plot
@@ -557,18 +566,27 @@ for t_idx in range(len(plot_times)):
     hb = dfs_HF.plot(HF_events_bin[0][t_nearest][plotelements], elements=plotelements, plot_type='patch',
                      show_mesh=False, cmap=color_map, vmin=0.5, vmax=1.5, ax=axs[t_idx, 2])
     # remove the x and y ticks
-    # axs[t_idx, 0].axis('off')
     axs[t_idx, 2].axes.xaxis.set_ticks([])
     axs[t_idx, 2].axes.yaxis.set_ticks([])
     # remove colorbar
     cbar = hb.collections[0].colorbar
     cbar.remove()
 
+    # Add inundated area to figure
+    A_HF = round(np.sum(HF_events_bin[0][t_nearest] * Area) / 1e6, 1)
+    axs[t_idx, 2].add_artist(AnchoredText(str(A_HF) + " km²", loc=3, borderpad=0.1, pad=0.2, frameon=False, prop=dict(fontsize=9)))
+
     # Insert title
     if t_idx == 0:
         axs[t_idx, 0].title.set_text('Low-fidelity model')
         axs[t_idx, 1].title.set_text('LSG model')
         axs[t_idx, 2].title.set_text('High-fidelity model')
+
+    #Scalebar
+    if t_idx == 2:
+        scalebar = ScaleBar(1, "m", length_fraction=0.25, location=2, width_fraction=0.025,
+                            font_properties=dict(size=9), sep=2, frameon=False)  # 5 km scale
+        axs[t_idx, 2].add_artist(scalebar)
 
     # Insert text showing the plotted time
     axs[t_idx, 0].set_ylabel(plot_times_str[t_idx], rotation=0, fontsize=10)
@@ -578,3 +596,4 @@ fig.tight_layout()
 plt.savefig('Managed_Data/Classification_Figures/Inundation_evolution_event1.png',
             bbox_inches="tight", dpi=300)
 plt.show()
+
